@@ -1,0 +1,41 @@
+ const [productinfo, setProductinfo] = useState({
+    title: "",
+    category: "",
+    price: undefined,
+    description: "",
+    image: "",
+    rating: {
+      rate: "",
+      count: "",
+    },
+  });
+
+ <TextInput
+              value={productinfo.title}
+              style={{ borderWidth: 1, flex: 2, color: "black" }}
+              onChangeText={(item) => {
+                {
+                  console.log("item name", item);
+                  setProductinfo((prevState) => ({
+                    ...prevState, // Spread previous state
+                    title: item, // Update username field
+                  }));
+                }
+              }}
+            />
+
+
+ <TextInput
+              value={productinfo.rating?.rate?.toString()}
+              style={{ borderWidth: 1, flex: 2, color: "black" }}
+              keyboardType="number-pad"
+              onChangeText={(item) =>
+                setProductinfo((prevState) => ({
+                  ...prevState, // Spread previous state
+                  rating: {
+                    ...prevState.rating, // Spread previous rating object
+                    rate: item, // Update rate field within rating object
+                  },
+                }))
+              }
+            />
