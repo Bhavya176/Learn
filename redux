@@ -1,0 +1,77 @@
+import {ADD_USER} from './actionTypes';
+
+const ActionLogin = (email, password) => {
+  try {
+    return async dispatch => {
+      if ((email, password)) {
+        dispatch({
+          type: ADD_USER,
+          payload: {email, password},
+        });
+      }
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default ActionLogin;
+
+
+import {ADD_USER} from './../action/actionTypes';
+const initialState = {
+  email: '',
+  password: '',
+};
+export const reducerLogin = (state = initialState, action) => {
+  const {type, payload} = action;
+  console.log('payload for login', payload);
+  switch (type) {
+    case ADD_USER:
+      return {...state, email: payload.email, password: payload.password};
+    default:
+      return state;
+  }
+};
+
+
+
+import {
+  legacy_createStore as createStore,
+  combineReducers,
+  applyMiddleware,
+} from "redux";
+import { thunk } from "redux-thunk";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { persistStore, persistReducer } from "redux-persist";
+import { userDetailsReducer } from "./reducer/userDetailReducer";
+import { reducerLogin } from "./reducer/reducerLogin";
+import { reducerDeviceId } from "./reducer/reducerDeviceId";
+const persistConfig = {
+  key: "root",
+  storage: AsyncStorage,
+};
+console.log("userDetailsReducer", userDetailsReducer);
+const appReducer = combineReducers({
+  reducerLogin: reducerLogin,
+  userDetailsReducer: userDetailsReducer,
+  reducerDeviceId: reducerDeviceId,
+});
+
+const rootReducer = (state, action) => {
+  return appReducer(state, action);
+};
+
+let persistedReducer = persistReducer(persistConfig, rootReducer);
+export const store = createStore(persistedReducer, {}, applyMiddleware(thunk));
+export const persistor = persistStore(store);
+
+
+
+
+
+      dispatch(ActionLogin(email, password)); -----------> add data in redux
+
+const { userDetail } = useSelector((state) => ({       --------> fetch data 
+    userDetail: state.reducerLogin,
+  }));
