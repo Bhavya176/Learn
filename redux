@@ -75,3 +75,8 @@ export const persistor = persistStore(store);
 const { userDetail } = useSelector((state) => ({       --------> fetch data 
     userDetail: state.reducerLogin,
   }));
+
+
+    <Provider store={store}>
+      <PersistGate isLoading={null} persistor={persistor}>
+        <PaperProvider>
