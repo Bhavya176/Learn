@@ -1,0 +1,104 @@
+import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {Login} from './screens/login';
+import {UserDetails} from './screens/userDetails';
+
+import {Provider, useDispatch, useSelector} from 'react-redux';
+import {View, Text, Button, StyleSheet, TouchableOpacity} from 'react-native';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+// import mapView from './screens/mapView';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Home from './screens/Home/index';
+
+// import MapBox from './screens/mapbox';
+const Stack = createNativeStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
+const MyStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="MyTab" component={MyTabs} />
+    </Stack.Navigator>
+  );
+};
+
+function MyTabs() {
+  return (
+    <Tab.Navigator
+      initialRouteName="Home"
+      activeColor="black"
+      inactiveColor="white"
+      labelStyle={{fontSize: 12}}
+      barStyle={{backgroundColor: '#80aaff', height: 70}}
+      style={{backgroundColor: 'tomato'}}>
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({color}) => (
+            <AntDesign name="home" size={24} color={color} />
+          ),
+        }}
+      />
+        <Tab.Screen
+        name="UserDetails"
+        component={UserDetails}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({color}) => (
+            <AntDesign name="user" color={color} size={24} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
+const StackL = createNativeStackNavigator();
+
+const RootNavigation = () => {
+  const token = useSelector(state => state.reducerLogin.email);
+  // console.log('token', token);
+  return (
+    <NavigationContainer>
+    {token == '' ? (
+      <MyStack />
+    ) : (
+      <StackL.Navigator
+        initialRouteName="Tabs"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <StackL.Screen name="Tabs" component={MyTabs} />
+        <StackL.Screen name="MyStack" component={MyStack} />
+      </StackL.Navigator>
+    )}
+  </NavigationContainer>
+  );
+};
+export const NavigationScreen = () => {
+  return <RootNavigation />;
+};
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#fc0',
+    flex: 1,
+    alignSelf: 'stretch',
+  },
+  title: {
+    fontSize: 20,
+    color: 'blue',
+    fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: 'purple',
+    fontWeight: 'bold',
+  },
+});
